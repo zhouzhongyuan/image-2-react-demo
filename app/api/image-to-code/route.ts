@@ -19,6 +19,8 @@ if you need to insert an image, use placehold.co to create a placeholder image. 
 
 systemPrompt = sketchListPagePrompt;
 
+export const runtime = 'edge';
+
 export async function POST(request: Request) {
   const { image, openAIKey } = await request.json();
   const body: GPT4VCompletionRequest = {

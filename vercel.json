@@ -1,6 +1,6 @@
 {
   "functions": {
-    "api/toHtml": {
+    "api/image-to-code": {
       "memory": 3008,
       "maxDuration": 300
     }

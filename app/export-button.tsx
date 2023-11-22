@@ -24,7 +24,7 @@ function ExportButton(props: IExportButtonProps){
             e.preventDefault();
             const dataUrl = base64Image;
             // const dataUrl = sketchList;
-            const resp = await fetch("/api/toHtml", {
+            const resp = await fetch("/api/image-to-code", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
