@@ -1,109 +1,102 @@
-To create a React page based on the provided wireframe using Ant Design components, we need to build a search form and a table to display the data with corresponding actions. Below is a `tsx` file for defining the React component and the respective `less` file for styling.
+Certainly! Here's a set of React components (`.tsx`) and corresponding styles (`.less`) which use Ant Design to create the page as shown in your wireframe.
 
-                                                                                                                                                                                                                                                                             First, install Ant Design by running `npm install antd` if you haven't already.
+First, let me create the `App.tsx` which will be the main React component:
 
-Next, here's the TypeScript JSX (`tsx`) file for the React component:
-
-    ```tsx
+```tsx
 import React from 'react';
-import { Form, Input, Button, DatePicker, Table, Space } from 'antd';
+import { Input, Button, DatePicker, Table } from 'antd';
 import './App.less';
 
+const { MonthPicker, RangePicker } = DatePicker;
+
+const dataSource = [
+  {
+    key: '1',
+    name: 'Tom',
+    status: 'Man',
+    type: 'Describe total number',
+    action: 'Detail'
+  },
+  {
+    key: '2',
+    name: 'Jack',
+    status: 'Man',
+    type: '',
+    action: 'Edit'
+  },
+  // ... Add more entries as desired
+];
+
+const columns = [
+  {
+    title: 'Name',
+    dataIndex: 'name',
+    key: 'name',
+  },
+  {
+    title: 'Status',
+    dataIndex: 'status',
+    key: 'status',
+  },
+  {
+    title: 'Type',
+    dataIndex: 'type',
+    key: 'type',
+  },
+  {
+    title: 'Description',
+    dataIndex: 'description',
+    key: 'description',
+  },
+  {
+    title: 'Action',
+    dataIndex: 'action',
+    key: 'action',
+    render: (text: string) => <Button>{text}</Button>,
+  },
+];
+
 const App: React.FC = () => {
-  const columns = [
-    {
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
-    },
-    {
-      title: 'Status',
-      dataIndex: 'status',
-      key: 'status',
-    },
-    {
-      title: 'Type',
-      dataIndex: 'type',
-      key: 'type',
-    },
-    {
-      title: 'Description',
-      dataIndex: 'description',
-      key: 'description',
-    },
-    {
-      title: 'Action',
-      key: 'action',
-      render: (text: any, record: any) => (
-        <Space size="middle">
-          <a href="#detail">Detail</a>
-          <a href="#edit">Edit</a>
-        </Space>
-      ),
-    },
-  ];
-
-  const data = [
-    {
-      key: '1',
-      name: 'Tom',
-      status: 'Man',
-      type: 'Type 1',
-      description: 'Describe total number',
-    },
-    // ... other data rows
-  ];
-
   return (
-    <div className="search-page">
-      <Form className="search-form" layout="inline">
-        <Form.Item label="ID" name="id">
-          <Input placeholder="ID" />
-        </Form.Item>
-        <Form.Item label="DatePicker" name="datePicker">
-          <DatePicker />
-        </Form.Item>
-        <Form.Item label="MonthPicker" name="monthPicker">
-          <DatePicker picker="month" />
-        </Form.Item>
-        <Form.Item label="User" name="user">
-          <Input placeholder="User" />
-        </Form.Item>
-        <Form.Item>
-          <Button type="primary" htmlType="submit">
-            Search
-          </Button>
-        </Form.Item>
-        <Form.Item>
-          <Button htmlType="button">
-            Reset
-          </Button>
-        </Form.Item>
-      </Form>
-      <Table columns={columns} dataSource={data} />
+    <div className="app">
+      <div className="search-section">
+        <Input placeholder="ID" className="search-input" />
+        <MonthPicker placeholder="Select month" className="search-input" />
+        <RangePicker className="search-input" />
+        <Input placeholder="User" className="search-input" />
+        <Button type="primary" className="search-btn">Search</Button>
+        <Button className="search-btn">Reset</Button>
+      </div>
+      <Table dataSource={dataSource} columns={columns} />
     </div>
   );
-};
+}
 
 export default App;
 ```
 
-Now, create the corresponding `less` file named `App.less`:
+And the associated LESS file, `App.less`:
 
 ```less
-.search-page {
-  padding: 16px;
-}
+.app {
+  padding: 24px;
+  background: #f0f2f5;
 
-.search-form {
-  margin-bottom: 16px;
+  .search-section {
+    display: flex;
+    margin-bottom: 20px;
 
-  .ant-form-item {
-    margin-right: 8px;
+    .search-input {
+      margin-right: 8px;
+    }
+
+    .search-btn {
+      margin-right: 8px;
+    }
   }
 }
 ```
 
-Make sure you have the appropriate loaders in your project to handle `less` files if you're using a bundler like Webpack.
+Please ensure you've installed Ant Design by running `npm install antd` in your project before using the above code. To compile the LESS file, you might need to set up your project to use a LESS compiler or use the create-react-app's built-in support for LESS by installing 'react-app-rewired' and 'customize-cra'.
 
-With these files, you've created a basic React component that should look similar to the wireframe you provided, using Ant Design components for styling and interaction. Adjust data and styling as needed based on the actual application you're building.
+Make sure you surround the JSX with appropriate HTML and that you've imported the Ant Design CSS. This code is a starting point; you need to wire up the search and reset buttons' functionality and handle pagination, sorting, and other features according to the desired behavior of your application.
