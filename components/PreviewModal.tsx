@@ -13,7 +13,7 @@ export function PreviewModal({
   html: string | null;
   setHtml: (html: string | null) => void;
 }) {
-  const [activeTab, setActiveTab] = useState<"preview" | "code">("preview");
+  const [activeTab, setActiveTab] = useState<"preview" | "code">("code");
 
   useEffect(() => {
     const highlight = async () => {
@@ -39,14 +39,14 @@ export function PreviewModal({
     >
       <div className="flex justify-between items-center p-4 border-b">
         <div className="flex space-x-1">
-          <TabButton
-            active={activeTab === "preview"}
-            onClick={() => {
-              setActiveTab("preview");
-            }}
-          >
-            Preview
-          </TabButton>
+          {/*<TabButton*/}
+          {/*  active={activeTab === "preview"}*/}
+          {/*  onClick={() => {*/}
+          {/*    setActiveTab("preview");*/}
+          {/*  }}*/}
+          {/*>*/}
+          {/*  Preview*/}
+          {/*</TabButton>*/}
           <TabButton
             active={activeTab === "code"}
             onClick={() => {

@@ -1,17 +1,9 @@
 "use client";
 
-import dynamic from "next/dynamic";
-import "@tldraw/tldraw/tldraw.css";
-import { useEditor } from "@tldraw/tldraw";
-import { getSvgAsImage } from "@/lib/getSvgAsImage";
-import { blobToBase64 } from "@/lib/blobToBase64";
 import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import { PreviewModal } from "@/components/PreviewModal";
-
-const Tldraw = dynamic(async () => (await import("@tldraw/tldraw")).Tldraw, {
-  ssr: false,
-});
+import ExportButton from "@/app/export-button";
 
 export default function Home() {
   const [html, setHtml] = useState<null | string>(null);
@@ -29,12 +21,73 @@ export default function Home() {
     };
   });
 
+    const [openAIKey, setOpenAIKey] = useState('');
+    const [imagePreview, setImagePreview] = useState('');
+    const [base64Image, setBase64Image] = useState('');
+
+    const handleImageChange = (e) => {
+        const imageFile = e.target.files[0];
+
+        if (imageFile) {
+            // Display the preview image
+            setImagePreview(URL.createObjectURL(imageFile));
+
+            // Convert the image to base64
+            const reader = new FileReader();
+            reader.onload = function () {
+                const base64Image = reader.result;
+                console.log("Base64 Image:", base64Image);
+                setBase64Image(base64Image);
+            };
+            reader.readAsDataURL(imageFile);
+        }
+    };
+
   return (
     <>
       <div className={`w-screen h-screen`}>
-        <Tldraw persistenceKey="tldraw">
-          <ExportButton setHtml={setHtml} />
-        </Tldraw>
+        <h1 className="text-3xl font-bold place-content-center w-screen flex justify-center py-10">
+          <div>Image to React</div>
+        </h1>
+          <div className="max-w-xl mx-auto my-8">
+              {/*<h1 className="text-3xl font-semibold mb-4">Image Upload Page</h1>*/}
+              <form>
+                  <div className="flex align-middle">
+                      <label className="block mb-2  py-2 px-4" htmlFor="imageInput">Select an image:</label>
+                      <input
+                          type="file"
+                          id="imageInput"
+                          accept="image/*"
+                          onChange={handleImageChange}
+                          className="mb-4 text-white py-2  rounded"
+                          required
+                      />
+                  </div>
+                  <div className="flex align-middle">
+                      <label className="block mb-2 align-middle py-2 px-4"  htmlFor="textInput">OpenAI key:</label>
+                      <input
+                          type="text"
+                          id="textInput"
+                          placeholder="ak-******"
+                          value={openAIKey}
+                          onChange={(e) => setOpenAIKey(e.target.value)}
+                          className="mb-4 p-2 border border-gray-300 rounded"
+                          required
+                      />
+                  </div>
+              </form>
+              <div id="imageContainer" className="mt-8">
+                  {/*<h2 className="text-xl font-semibold mb-2">Preview:</h2>*/}
+                  {imagePreview && (
+                      <img
+                          src={imagePreview}
+                          alt="Preview Image"
+                          className="max-w-full max-h-48 mb-4"
+                      />
+                  )}
+              </div>
+              <ExportButton setHtml={setHtml} base64Image={base64Image} openAIKey={openAIKey} />
+          </div>
       </div>
       {html &&
         ReactDOM.createPortal(
@@ -48,66 +101,5 @@ export default function Home() {
           document.body
         )}
     </>
-  );
-}
-
-function ExportButton({ setHtml }: { setHtml: (html: string) => void }) {
-  const editor = useEditor();
-  const [loading, setLoading] = useState(false);
-  // A tailwind styled button that is pinned to the bottom right of the screen
-  return (
-    <button
-      onClick={async (e) => {
-        setLoading(true);
-        try {
-          e.preventDefault();
-          const svg = await editor.getSvg(
-            Array.from(editor.currentPageShapeIds)
-          );
-          if (!svg) {
-            return;
-          }
-          const png = await getSvgAsImage(svg, {
-            type: "png",
-            quality: 1,
-            scale: 1,
-          });
-          const dataUrl = await blobToBase64(png!);
-          const resp = await fetch("/api/toHtml", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ image: dataUrl }),
-          });
-
-          const json = await resp.json();
-
-          if (json.error) {
-            alert("Error from open ai: " + JSON.stringify(json.error));
-            return;
-          }
-
-          const message = json.choices[0].message.content;
-          const start = message.indexOf("<!DOCTYPE html>");
-          const end = message.indexOf("</html>");
-          const html = message.slice(start, end + "</html>".length);
-          setHtml(html);
-        } finally {
-          setLoading(false);
-        }
-      }}
-      className="fixed bottom-4 right-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ="
-      style={{ zIndex: 1000 }}
-      disabled={loading}
-    >
-      {loading ? (
-        <div className="flex justify-center items-center ">
-          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-        </div>
-      ) : (
-        "Make Real"
-      )}
-    </button>
   );
 }
