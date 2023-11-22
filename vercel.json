@@ -1,6 +1,6 @@
 {
   "functions": {
-    "api/image-to-code/**/*.ts": {
+    "api/image-to-code/route.ts": {
       "memory": 3008,
       "maxDuration": 300
     }
