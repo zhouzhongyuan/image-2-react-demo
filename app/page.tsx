@@ -6,7 +6,7 @@ import { PreviewModal } from "@/components/PreviewModal";
 import ExportButton from "@/app/export-button";
 import defaultHtml from './output/list-react-antd';
 export default function Home() {
-  const [html, setHtml] = useState<null | string>(defaultHtml);
+  const [html, setHtml] = useState<null | string>(null);
 
   useEffect(() => {
     const listener = (e: KeyboardEvent) => {
