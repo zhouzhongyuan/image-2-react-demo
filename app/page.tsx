@@ -25,6 +25,7 @@ export default function Home() {
     const [imagePreview, setImagePreview] = useState('');
     const [base64Image, setBase64Image] = useState('');
 
+    // @ts-ignore
     const handleImageChange = (e) => {
         const imageFile = e.target.files[0];
 
@@ -37,6 +38,7 @@ export default function Home() {
             reader.onload = function () {
                 const base64Image = reader.result;
                 console.log("Base64 Image:", base64Image);
+                // @ts-ignore
                 setBase64Image(base64Image);
             };
             reader.readAsDataURL(imageFile);
