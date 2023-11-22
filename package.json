@@ -18,6 +18,7 @@
     "react-dom": "^18"
   },
   "devDependencies": {
+    "@cloudflare/next-on-pages": "^1.7.4",
     "@types/canvas-size": "^1.2.1",
     "@types/node": "^20",
     "@types/prismjs": "^1.26.3",
